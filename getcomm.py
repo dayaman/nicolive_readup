@@ -90,7 +90,7 @@ def main():
         if index != -1:
             user_name = update_kote(come.chat.get('user_id'), msg[index+1:])
             disp_name = user_name
-        elif come.chat.get('anonymity') == '1':
+        elif come.chat.get('anonymity') == '1' and ctrl_sqlite.search(come.chat.get('user_id')) == None:
             user_name = ""
             disp_name = "名無しさん"
         else:
