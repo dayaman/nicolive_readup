@@ -34,5 +34,14 @@ def insert(user_id, name):
         c.execute(insert_sql, u_id)
         conn.commit()
 
+def update(user_id, name):
+    global dbname
+    with closing(sqlite3.connect(dbname)) as conn:
+        c = conn.cursor()
+        update_sql = 'update users set name=? where id=?'
+        u_id = (name, user_id)
+        c.execute(update_sql, u_id)
+        conn.commit()
+
 if __name__ == '__main__':
     main()
