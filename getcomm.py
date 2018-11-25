@@ -84,13 +84,14 @@ def main():
         data = sock.recv(2048)
         come = BeautifulSoup(data.decode(), features="html.parser")
         msg = come.chat.string
+        index = msg.rfind("@") #ケツから検索
         if msg[0] == "/":
             continue
         if come.chat.get('anonymity') == '1':
             user_name = ""
             disp_name = "名無しさん"
         else:
-            user_name = get_name(come.chat.get('user_id'))
+            user_name = insert_kote(come.chat.get('user_id'), msg[index+1:]) if index != -1 else get_name(come.chat.get('user_id'))
             disp_name = user_name
             
 
@@ -121,6 +122,10 @@ def get_name(user_id):
         user_name = user_name[0]
 
     return user_name
+
+def insert_kote(user_id, kotehan):
+    ctrl_sqlite.insert(user_id, kotehan)
+    return kotehan
 
 
 if __name__ == '__main__':
