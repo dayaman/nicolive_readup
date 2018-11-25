@@ -91,7 +91,7 @@ def main():
             user_name = ""
             disp_name = "名無しさん"
         else:
-            user_name = insert_kote(come.chat.get('user_id'), msg[index+1:]) if index != -1 else get_name(come.chat.get('user_id'))
+            user_name = update_kote(come.chat.get('user_id'), msg[index+1:]) if index != -1 else get_name(come.chat.get('user_id'))
             disp_name = user_name
             
 
@@ -123,8 +123,12 @@ def get_name(user_id):
 
     return user_name
 
-def insert_kote(user_id, kotehan):
-    ctrl_sqlite.insert(user_id, kotehan)
+def update_kote(user_id, kotehan):
+    user_name = ctrl_sqlite.search(user_id)
+    if user_name == None:
+        ctrl_sqlite.insert(user_id, kotehan)
+    else:
+        ctrl_sqlite.update(user_id, kotehan)
     return kotehan
 
 
