@@ -56,13 +56,14 @@ def main():
     r.close()
     
     # XMLのデータからサーバのアドレス,ポート番号と、スレッドidを取り出す
-    doc = minidom.parseString(data)
-    child = doc.getElementsByTagName('getplayerstatus')[0]
-    if child.getElementsByTagName('ms'):
-        mstag = child.getElementsByTagName('ms')[0]
-        addr = mstag.getElementsByTagName('addr')[0].firstChild.data.strip()
-        port = mstag.getElementsByTagName('port')[0].firstChild.data.strip()
-        threadid = mstag.getElementsByTagName('thread')[0].firstChild.data.strip()
+    soup = BeautifulSoup(data, 'xml')
+    child = soup.find('getplayerstatus')
+    if child.find('ms'):
+        mstag = child.find('ms')
+        addr = mstag.find('addr').string
+        port = mstag.find('port').string
+        threadid = mstag.find('thread').string
+
     
     # ソケット生成し、取得したアドレス、ポートで接続
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -107,8 +108,10 @@ def readup():
     while True:
         while not comm_q.empty():
             try:
+                # knockApi(comm_q.get(), "sumire", "nico")
+                # knockApi(comm_q.get(), "anzu", "nico")
                 knockApi(comm_q.get(), "maki", "nico")
-                cmd = 'play ./sound/nico/msg.wav'
+                cmd = 'play -v 2 ./sound/nico/msg.wav'
                 subprocess.run(cmd, stdout = subprocess.DEVNULL,stderr = subprocess.DEVNULL, shell=True)
             except:
                 pass
