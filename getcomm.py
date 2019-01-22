@@ -58,6 +58,7 @@ def main():
     # XMLのデータからサーバのアドレス,ポート番号と、スレッドidを取り出す
     soup = BeautifulSoup(data, 'xml')
     child = soup.find('getplayerstatus')
+    print(child.get('status'))
     if child.find('ms'):
         mstag = child.find('ms')
         addr = mstag.find('addr').string
@@ -98,7 +99,9 @@ def main():
             user_name = get_name(come.chat.get('user_id'))
             disp_name = user_name
             
-
+        if ( len(disp_name) > 20):
+            disp_name = disp_name[:20]
+        
         print('{}:{}'.format(msg, disp_name))
         if is_readup == 'y':
             comm_q.put("{}、{}".format(msg, user_name))
